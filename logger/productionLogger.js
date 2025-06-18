@@ -1,5 +1,5 @@
 import winston from "winston"
-const { combine, timestamp, label, printf,colorize } = winston.format;
+const { combine, timestamp, label, printf,colorize,json,prettyPrint,errors } = winston.format;
 import dotenv from "dotenv";
 dotenv.config(); // ✅ load env first
 
@@ -12,8 +12,10 @@ const productionLogger = ()=>{
         return winston.createLogger({
             level: 'info',
             format: combine(
+                errors({stack:true}),
                 timestamp(),
-                myFormat
+                json(),
+                prettyPrint()
             ),
             defaultMeta: { service: 'user-service' },
             transports: [new winston.transports.Console()],
